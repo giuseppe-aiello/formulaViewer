@@ -74,7 +74,7 @@ void FormulaWidget::setFormula()
 
     this->ast = buildAST(tokens);
 
-    this->graphicsNode = createGraphicsNodeFromAST(ast->getRoot());
+    this->graphicsNode = createNodeGraphicsFromAST(ast->getRoot());
 
 
     //con update chiamiamo indirettamente l'evento paintEvent, che disegnerà le nostre formule
@@ -94,8 +94,8 @@ void FormulaWidget::paintEvent(QPaintEvent* event)
 
     //if(ast!=nullptr) ast->printAST();
 
-
-    if(graphicsNode!=nullptr) formulaPos = graphicsNode->draw(formulaPos, p);
+    sizes misure = {0, 0};
+    if(graphicsNode!=nullptr) graphicsNode->draw(formulaPos, p);
 
 
 }

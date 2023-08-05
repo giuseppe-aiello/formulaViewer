@@ -8,7 +8,6 @@
 #include <QLineEdit>
 #include <iostream>
 #include <QWidget>
-#include <QPlainTextEdit>
 
 #include "functionParser/ast.h"
 #include "functionParser/astGraphics.h"
