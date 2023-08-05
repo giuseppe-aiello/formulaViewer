@@ -28,10 +28,6 @@ SOURCES += \
     functionAnalyzer/astGraphics.cpp \
     functionAnalyzer/tokenizer.cpp \
     functionAnalyzer/utilities.cpp \
-    functionParser/ast.cpp \
-    functionParser/astGraphics.cpp \
-    functionParser/tokenizer.cpp \
-    functionParser/utilities.cpp \
         main.cpp \
         widget.cpp \
     FormulaWidget.cpp
@@ -41,10 +37,6 @@ HEADERS += \
     functionAnalyzer/astGraphics.h \
     functionAnalyzer/tokenizer.h \
     functionAnalyzer/utilities.h \
-    functionParser/ast.h \
-    functionParser/astGraphics.h \
-    functionParser/tokenizer.h \
-    functionParser/utilities.h \
         widget.h \
     FormulaWidget.h
 
@@ -53,6 +45,6 @@ FORMS += \
 
 DISTFILES +=
 
-INCLUDEPATH += $$PWD/functionParser
+INCLUDEPATH += $$PWD/functionAnalyzer
 
 INCLUDEPATH += $$_PRO_FILE_PWD_

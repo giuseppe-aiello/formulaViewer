@@ -9,9 +9,9 @@
 #include <iostream>
 #include <QWidget>
 
-#include "functionParser/ast.h"
-#include "functionParser/astGraphics.h"
-#include "functionParser/tokenizer.h"
+#include "functionAnalyzer/ast.h"
+#include "functionAnalyzer/astGraphics.h"
+#include "functionAnalyzer/tokenizer.h"
 
 /*
 class FormulaItem
