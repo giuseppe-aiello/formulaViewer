@@ -24,6 +24,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    functionAnalyzer/ast.cpp \
+    functionAnalyzer/astGraphics.cpp \
+    functionAnalyzer/tokenizer.cpp \
+    functionAnalyzer/utilities.cpp \
     functionParser/ast.cpp \
     functionParser/astGraphics.cpp \
     functionParser/tokenizer.cpp \
@@ -33,6 +37,10 @@ SOURCES += \
     FormulaWidget.cpp
 
 HEADERS += \
+    functionAnalyzer/ast.h \
+    functionAnalyzer/astGraphics.h \
+    functionAnalyzer/tokenizer.h \
+    functionAnalyzer/utilities.h \
     functionParser/ast.h \
     functionParser/astGraphics.h \
     functionParser/tokenizer.h \
