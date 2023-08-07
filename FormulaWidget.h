@@ -10,7 +10,7 @@
 #include <QWidget>
 
 #include "functionAnalyzer/ast.h"
-#include "functionAnalyzer/astGraphics.h"
+#include "astGraphics.h"
 #include "functionAnalyzer/tokenizer.h"
 
 /*

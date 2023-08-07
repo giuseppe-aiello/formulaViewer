@@ -10,8 +10,13 @@ ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node){
         return new BinaryOperatorNodeGraphics(op, leftGraphics, rightGraphics);
     }else if(auto funzione = dynamic_cast<FunctionNode*>(node)){
         std::string functionName = funzione->getFunction();
-        ASTNodeGraphics* argumentGraphics = createNodeGraphicsFromAST(funzione->getArgs()[0]);
-        return new FunctionNodeGraphics(functionName, argumentGraphics); //risolvi -----------
+        if(functionName == "sqrt"){
+            std::vector<ASTNodeGraphics*> argumentGraphics;
+            for(size_t i=0; i< funzione->getArgs().size(); i++){
+                argumentGraphics.push_back(createNodeGraphicsFromAST(funzione->getArgs()[i]));
+            }
+        return new SQRTNodeGraphics(functionName, argumentGraphics);
+        }//risolvi -----------
     } else {
         return nullptr;
     }
@@ -28,7 +33,7 @@ QPoint drawString(QString str, QPoint pos, QPainter& p){
     return pos;
 }
 
-void FunctionNodeGraphics::draw(QPoint& pos, QPainter& p) {
+void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
     //pos non viene modificato, e viene inizializzato posArgument = pos attuale
 
     pos = QPoint(pos.x() + 12, pos.y());
@@ -37,15 +42,17 @@ void FunctionNodeGraphics::draw(QPoint& pos, QPainter& p) {
     int valueHeight;
 
     //FARE FUNZIONE RICORSIVA PER VERIFICARE SE L'ARGOMENTO DI UNA FUNZIUONE CONTIENE UN'ALTRA FUNZIONE
-
-    if(isArgumentFunction(argument)!=0){
+    if(isArgumentFunction(argument[1])!=0){
         posArgument = QPoint(pos.x(), pos.y() + 5);
-        argument->draw(posArgument, p);
-        this->misure.height = 10 + argument->misure.height;
+        argument[1]->draw(posArgument, p);
+        //PROBLEMA IN AST.H
+        //Se vi è una virgola nell'argomento dell'argomento "sqrt(3, 39393 + sqrt(3, 39939))"
+        //viene contato con un argomento del primo sqrt -> CRASH
+        this->misure.height = 10 + argument[1]->misure.height;
     } else{
         posArgument = pos;
-        argument->draw(posArgument, p);
-        this->misure.height =  argument->misure.height;
+        argument[1]->draw(posArgument, p);
+        this->misure.height =  argument[1]->misure.height;
 
     }
 
@@ -56,7 +63,8 @@ void FunctionNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
     //Appena finirà di disegnare l'argomento, la funzione disegnerà il simbolo della radice
     //a partire da pos (che è invariata fin dall'inizio della funzione.
-
+    NumberNodeGraphics * num = dynamic_cast<NumberNodeGraphics*>(argument[0]);
+    p.drawText(pos.x(), pos.y() + 4 + valueHeight / 2, num->number);
     p.drawLine(pos.x(), pos.y() + 4 + valueHeight / 2, pos.x() + 5, pos.y() + 4 + valueHeight);
     p.drawLine(pos.x() + 5, pos.y() + 4 + valueHeight, pos.x() + 10, pos.y() + 1);
     p.drawLine(pos.x() + 10, pos.y() + 1, pos.x() + 14 + valueWidth, pos.y() + 1);

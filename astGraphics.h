@@ -32,7 +32,7 @@ public:
 
     void draw(QPoint& pos, QPainter& p) override;
 
-private:
+public:
     QString number;
 };
 
@@ -58,17 +58,24 @@ private:
 
 class FunctionNodeGraphics : public ASTNodeGraphics {
 public:
-    FunctionNodeGraphics(std::string function, ASTNodeGraphics* arg)
-        : argument(arg) {
+
+    virtual void draw(QPoint& pos, QPainter& p) = 0;
+
+protected:
+    QString name;
+    std::vector<ASTNodeGraphics*> argument;
+};
+
+class SQRTNodeGraphics : public FunctionNodeGraphics {
+public:
+    SQRTNodeGraphics(std::string function, std::vector<ASTNodeGraphics*> arg) {
         QString n = QString::fromStdString(function);
         name = n;
+
+        argument = arg;
     }
 
     void draw(QPoint& pos, QPainter& p) override;
-
-private:
-    QString name;
-    ASTNodeGraphics * argument;
 };
 
 ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node);
