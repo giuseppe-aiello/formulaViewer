@@ -1,0 +1,3 @@
+[submodule "functionAnalyzer"]
+	path = functionAnalyzer
+	url = git@github.com:giuseppe-aiello/functionAnalyzer.git
