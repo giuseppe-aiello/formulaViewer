@@ -1,4 +1,4 @@
 [submodule "functionAnalyzer"]
 	path = functionAnalyzer
-	url = git@github.com:giuseppe-aiello/functionAnalyzer.git
+	url = https://github.com/giuseppe-aiello/functionAnalyzer.git
 	branch = main
