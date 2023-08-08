@@ -71,7 +71,17 @@ public:
     SQRTNodeGraphics(std::string function, std::vector<ASTNodeGraphics*> arg) {
         QString n = QString::fromStdString(function);
         name = n;
+        argument = arg;
+    }
 
+    void draw(QPoint& pos, QPainter& p) override;
+};
+
+class FractionNodeGraphics : public FunctionNodeGraphics {
+public:
+    FractionNodeGraphics(std::string function, std::vector<ASTNodeGraphics*> arg) {
+        QString n = QString::fromStdString(function);
+        name = n;
         argument = arg;
     }
 

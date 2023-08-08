@@ -89,12 +89,12 @@ void FormulaWidget::paintEvent(QPaintEvent* event)
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing);
     p.setPen(Qt::black);
-
-    QPoint formulaPos(2, 2);
+    QFont normal("StyleNormal", 10);
+    p.setFont(normal);
+    QPoint formulaPos(5, 5);
 
     //if(ast!=nullptr) ast->printAST();
 
-    sizes misure = {0, 0};
     if(graphicsNode!=nullptr) graphicsNode->draw(formulaPos, p);
 
 
