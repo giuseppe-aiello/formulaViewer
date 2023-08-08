@@ -3,3 +3,7 @@
 	url = https://github.com/giuseppe-aiello/functionAnalyzer.git
 	branch = main
 	update = rebase
+[submodule "functionAnalyzer/"]
+	branch = main
+[submodule "/functionAnalyzer"]
+	branch = main
