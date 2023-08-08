@@ -41,19 +41,17 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
     int valueHeight;
 
-    //FARE FUNZIONE RICORSIVA PER VERIFICARE SE L'ARGOMENTO DI UNA FUNZIUONE CONTIENE UN'ALTRA FUNZIONE
-    if(isArgumentFunction(argument[1])!=0){
+    //SE CONTIENE DUE ARGOMENTI
+    ASTNodeGraphics * first = argument.back();
+    argument.pop_back();
+    if(isArgumentFunction(first)!=0){
         posArgument = QPoint(pos.x(), pos.y() + 5);
-        argument[1]->draw(posArgument, p);
-        //PROBLEMA IN AST.H
-        //Se vi è una virgola nell'argomento dell'argomento "sqrt(3, 39393 + sqrt(3, 39939))"
-        //viene contato con un argomento del primo sqrt -> CRASH
-        this->misure.height = 10 + argument[1]->misure.height;
+        first->draw(posArgument, p);
+        this->misure.height = 10 + first->misure.height;
     } else{
         posArgument = pos;
-        argument[1]->draw(posArgument, p);
-        this->misure.height =  argument[1]->misure.height;
-
+        first->draw(posArgument, p);
+        this->misure.height =  first->misure.height;
     }
 
     //QPoint posArgument2 = posArgument;
@@ -61,18 +59,19 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
     int x = posArgument.x() - pos.x();
     int valueWidth = x; //viene calcolato la larghezza del disegno dell'argomento per poi disegnare la sqrt
 
-    //Appena finirà di disegnare l'argomento, la funzione disegnerà il simbolo della radice
-    //a partire da pos (che è invariata fin dall'inizio della funzione.
-    NumberNodeGraphics * num = dynamic_cast<NumberNodeGraphics*>(argument[0]);
-    p.drawText(pos.x(), pos.y() + 4 + valueHeight / 2, num->number);
+    if(!argument.empty()){
+        NumberNodeGraphics * second = dynamic_cast<NumberNodeGraphics *>(argument.back());
+        if(second!=nullptr){
+            p.drawText(pos.x(), pos.y() + 4 + valueHeight / 2, second->number);
+        }
+    }
     p.drawLine(pos.x(), pos.y() + 4 + valueHeight / 2, pos.x() + 5, pos.y() + 4 + valueHeight);
     p.drawLine(pos.x() + 5, pos.y() + 4 + valueHeight, pos.x() + 10, pos.y() + 1);
     p.drawLine(pos.x() + 10, pos.y() + 1, pos.x() + 14 + valueWidth, pos.y() + 1);
 
     pos = QPoint(pos.x() + valueWidth + 5, pos.y());
-    //posArgument = posArgument2;
+    }
 
-}
 
 void BinaryOperatorNodeGraphics::draw(QPoint& pos, QPainter& p) {
     int valueWidth = p.fontMetrics().horizontalAdvance(op);
