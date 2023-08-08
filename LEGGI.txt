@@ -1,9 +1,0 @@
-
-
-ERRORE IN GETINDEX()
-
-//Se vi è una virgola nell'argomento dell'argomento "sqrt(3, 39393 + sqrt(3, 39939))"
-//viene contato con un argomento del primo sqrt -> CRASH
-
-//Bisogna fare contare solo le virgole nell'argomento attuale senza entrare nei sub-argomenti delle funzioni
-//all'interno di ARGS
