@@ -2,3 +2,4 @@
 	path = functionAnalyzer
 	url = https://github.com/giuseppe-aiello/functionAnalyzer.git
 	branch = main
+	update = merge
