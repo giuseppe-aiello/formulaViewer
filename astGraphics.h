@@ -20,6 +20,7 @@ class ASTNodeGraphics {
 public:
     virtual ~ASTNodeGraphics() {}
     virtual void draw(QPoint& pos, QPainter& p) = 0;
+    virtual void calculateSizes(sizes& sz, QPainter& p) = 0;
     sizes misure;
 };
 
@@ -29,6 +30,8 @@ public:
         QString num = QString::fromStdString(value);
         number = num;
     }
+
+    void calculateSizes(sizes& sz,QPainter& p) override;
 
     void draw(QPoint& pos, QPainter& p) override;
 
@@ -44,6 +47,9 @@ public:
         op = o;
     }
     void draw(QPoint& pos, QPainter& p) override ;
+
+    void calculateSizes(sizes& sz,QPainter& p) override;
+
     ASTNodeGraphics * getLeft(){
         return left;
     }
@@ -74,6 +80,7 @@ public:
         argument = arg;
     }
 
+    void calculateSizes(sizes& sz,QPainter& p) override;
     void draw(QPoint& pos, QPainter& p) override;
 };
 
@@ -85,6 +92,7 @@ public:
         argument = arg;
     }
 
+    void calculateSizes(sizes& sz,QPainter& p) override;
     void draw(QPoint& pos, QPainter& p) override;
 };
 

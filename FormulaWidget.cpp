@@ -91,7 +91,8 @@ void FormulaWidget::paintEvent(QPaintEvent* event)
     p.setPen(Qt::black);
     QFont normal("StyleNormal", 10);
     p.setFont(normal);
-    QPoint formulaPos(5, 5);
+    QPoint formulaPos(5, 15);
+
 
     //if(ast!=nullptr) ast->printAST();
 

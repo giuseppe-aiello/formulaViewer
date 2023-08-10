@@ -55,7 +55,7 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
-    ASTNodeGraphics * graphicsNode;
+    ASTNodeGraphics * graphicsNode = nullptr;
 
 };
 
