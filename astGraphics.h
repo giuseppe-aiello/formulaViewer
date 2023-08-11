@@ -9,8 +9,8 @@
 #include "ast.h"
 
 struct sizes{
-    int width;
-    int height;
+    int width=0;
+    int height=0;
 };
 
 QPoint drawString(QString str, QPoint pos, QPainter& p);

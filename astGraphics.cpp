@@ -2,8 +2,6 @@
 
 ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node){
     if(auto number = dynamic_cast<NumberNode*>(node)){
-        std::cout << "\nNUMBER" <<  std::endl;
-
         return new NumberNodeGraphics(number->getValue());
     }else if(auto operatore = dynamic_cast<BinaryOperatorNode*>(node)){
         std::string op = operatore->getOp();
@@ -22,7 +20,6 @@ ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node){
             std::vector<ASTNodeGraphics*> argumentGraphics;
             for(size_t i=0; i< funzione->getArgs().size(); i++){
                 argumentGraphics.push_back(createNodeGraphicsFromAST(funzione->getArgs()[i]));
-                std::cout << "\nALLERT" <<  std::endl;
             }
         return new FractionNodeGraphics(functionName, argumentGraphics);
         }
@@ -60,13 +57,13 @@ QPoint drawString(QString str, QPoint pos, QPainter& p){
 
 void NumberNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
 
-    sz.width += p.fontMetrics().horizontalAdvance(this->number);
-    std::cout << "\nNUMBER:" << this->number.toStdString() << std::endl;
+    sz.width += p.fontMetrics().horizontalAdvance(this->number, -1);
 
+    //std::cout << "NUMBER WIDTH = " << sz.wi
 }
 
 void BinaryOperatorNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
-    sz.width += p.fontMetrics().horizontalAdvance(this->op) + 10;
+    sz.width += p.fontMetrics().horizontalAdvance(this->op, -1) + 10;
 
     if(left!=nullptr)
         left->calculateSizes(sz, p);
@@ -176,10 +173,10 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
 void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
-    p.fontMetrics().horizontalAdvance("START");
     pos = QPoint(pos.x(), pos.y());
     QPoint posNumerator;
     QPoint posDenominator;
+
 
     ASTNodeGraphics * numerator = argument[0];
 
@@ -188,13 +185,13 @@ void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
     int valueHeight = 0;
 
     sizes numSizes;
+
     numerator->calculateSizes(numSizes, p);
 
     sizes denSizes;
     denominator->calculateSizes(denSizes, p);
 
     if(numSizes.width>denSizes.width){
-        std::cout << "\nNUMSIZES>DENSIZES" <<  std::endl;
 
         posNumerator = QPoint(pos.x(), pos.y()-10);
         numerator->draw(posNumerator, p);
@@ -207,7 +204,6 @@ void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
         pos = QPoint(pos.x() + numSizes.width, pos.y());
 
     }else{
-        std::cout << "\nDENSIZES>NUMSIZES" <<  std::endl;
 
         posDenominator = QPoint(pos.x(), pos.y()+10);
         denominator->draw(posDenominator, p);
@@ -234,7 +230,6 @@ void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
         width = y;
         p.drawLine(pos.x(), posNumerator.y()+2, posDenominator.x(), posNumerator.y()+2);
     }*/
-    p.fontMetrics().horizontalAdvance("START");
 
 }
 
