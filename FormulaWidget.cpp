@@ -1,49 +1,6 @@
 #include "FormulaWidget.h"
 
 
-//const QString FormulaItem::REG_GLOBAL = "(?<!\\()([-+]?[0-9. ]*)(?!\\))|sqrt\\((?<value>\\d+)\\)";
-
-//const QString FormulaItem::REG_SQUAREROOT = "sqrt\\((?<value>\\d+)\\)";
-//const QString FormulaItem::REG_NORMAL = "(?<!\\()([-+]?[0-9. ]*)(?!\\))";
-//const QString FormulaItem::REG_FORMULA = "\\((.*)\\)";
-
-/*
-QPoint FormulaItem::drawSquareRoot(const QPoint& pos, QPainter& p) const
-{
-
-    QString number;
-
-    QRegularExpression reg(FormulaItem::REG_SQUAREROOT);
-    QRegularExpressionMatchIterator i = reg.globalMatch(m_value);
-
-    while(i.hasNext()){
-        QRegularExpressionMatch match = i.next();
-        if(match.hasMatch())
-        {
-            number.append(match.captured("value"));
-        }
-    }
-
-    int valueWidth = p.fontMetrics().horizontalAdvance(number);
-    int valueHeight = p.fontMetrics().height();
-
-    p.drawLine(pos.x(), 4 + valueHeight / 2, pos.x() + 5, 4 + valueHeight);
-    p.drawLine(pos.x() + 5, 4 + valueHeight, pos.x() + 10, pos.y() + 1);
-    p.drawLine(pos.x() + 10, pos.y() + 1, pos.x() + 14 + valueWidth, pos.y() + 1);
-
-    p.drawText(QRect(pos.x() + 12, pos.y() + 4, pos.x() + 12 + valueWidth, pos.y() + 4 + valueHeight), number);
-    return QPoint(pos.x() + valueWidth + 20, pos.y());
-}
-
-QPoint FormulaItem::drawNumber(const QPoint& pos, QPainter& p) const
-{
-    int valueWidth = p.fontMetrics().horizontalAdvance(m_value);
-    int valueHeight = p.fontMetrics().height();
-
-    p.drawText(QRect(pos.x() + 12, pos.y() + 4, pos.x() + 12 + valueWidth, pos.y() + 4 + valueHeight), m_value);
-    return QPoint(pos.x() + valueWidth + 20, pos.y());
-}
-*/
 FormulaWidget::FormulaWidget(QWidget* parent) :
     BaseClass(parent)
 {
@@ -58,9 +15,6 @@ FormulaWidget::FormulaWidget(QWidget* parent) :
 
 void FormulaWidget::setFormula()
 {
-
-    //QRegularExpression isSquareRoot(FormulaItem::REG_SQUAREROOT);
-    //QRegularExpression number(FormulaItem::REG_NORMAL);
 
 
     QString testo;
@@ -91,7 +45,7 @@ void FormulaWidget::paintEvent(QPaintEvent* event)
     p.setPen(Qt::black);
     QFont normal("StyleNormal", 10);
     p.setFont(normal);
-    QPoint formulaPos(5, 15);
+    QPoint formulaPos(5, 50);
 
 
     //if(ast!=nullptr) ast->printAST();

@@ -58,7 +58,9 @@ QPoint drawString(QString str, QPoint pos, QPainter& p){
 void NumberNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
 
     sz.width += p.fontMetrics().horizontalAdvance(this->number, -1);
-
+    if(sz.height < 5){
+        sz.height=5;
+    }
     //std::cout << "NUMBER WIDTH = " << sz.wi
 }
 
@@ -80,6 +82,10 @@ void SQRTNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
         this->argument[i]->calculateSizes(sz, p);
     }
 
+    if(sz.height < 7){
+        sz.height=7;
+    }
+
 }
 
 void FractionNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
@@ -94,6 +100,10 @@ void FractionNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
         sz.width += numerator.width;
     }
     else sz.width += denominator.width;
+
+    if(sz.height < 15){
+        sz.height=15;
+    }
 }
 
 void NumberNodeGraphics::draw(QPoint& pos, QPainter& p) {
@@ -193,26 +203,26 @@ void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
     if(numSizes.width>denSizes.width){
 
-        posNumerator = QPoint(pos.x(), pos.y()-10);
+        posNumerator = QPoint(pos.x(), pos.y()-10- numSizes.height);
         numerator->draw(posNumerator, p);
 
         int centeredX= (numSizes.width - denSizes.width) /2;
-        posDenominator = QPoint(pos.x() + centeredX, pos.y()+10);
+        posDenominator = QPoint(pos.x() + centeredX, pos.y()+10 + denSizes.height);
         denominator->draw(posDenominator, p);
 
-        p.drawLine(pos.x(), posDenominator.y()+2, posNumerator.x(), posDenominator.y()+2);
+        p.drawLine(pos.x(), pos.y()+10, posNumerator.x(), pos.y()+10);
         pos = QPoint(pos.x() + numSizes.width, pos.y());
 
     }else{
 
-        posDenominator = QPoint(pos.x(), pos.y()+10);
+        posDenominator = QPoint(pos.x(), pos.y()+8 + denSizes.height);
         denominator->draw(posDenominator, p);
 
         int centeredX= (denSizes.width - numSizes.width) /2;
-        posNumerator = QPoint(pos.x() + centeredX, pos.y()-10);
+        posNumerator = QPoint(pos.x() + centeredX, pos.y()-10 - numSizes.height);
         numerator->draw(posNumerator, p);
 
-        p.drawLine(pos.x(), posDenominator.y()+2, posDenominator.x(), posDenominator.y()+2);
+        p.drawLine(pos.x(),pos.y()+ 10, posDenominator.x(), pos.y()+10);
         pos = QPoint(pos.x() + denSizes.width, pos.y());
 
     }
