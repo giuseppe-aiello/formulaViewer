@@ -29,6 +29,7 @@ SOURCES += \
     functionAnalyzer/tokenizer.cpp \
     functionAnalyzer/utilities.cpp \
         main.cpp \
+    mainwindow.cpp \
         widget.cpp \
     FormulaWidget.cpp
 
@@ -37,10 +38,12 @@ HEADERS += \
     functionAnalyzer/ast.h \
     functionAnalyzer/tokenizer.h \
     functionAnalyzer/utilities.h \
+    mainwindow.h \
         widget.h \
     FormulaWidget.h
 
 FORMS += \
+        mainwindow.ui \
         widget.ui
 
 DISTFILES +=
