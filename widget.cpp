@@ -10,8 +10,11 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    connect(ui->lineEdit, &QLineEdit::returnPressed, ui->formulaWidget, &FormulaWidget::setFormula);
+    connect(ui->lineEdit, &QLineEdit::textChanged, ui->formulaWidget, &FormulaWidget::setFormula);
+    connect(ui->formulaWidget, &FormulaWidget::mouseMoved, ui->formulaWidget->getWarningTriangle(), &TriangleWidget::handleMouseMoved);
 
+
+    //UI---------------------------------
     ui->menuLayout->setAlignment(Qt::AlignLeft);
 
     //Toolbar
@@ -36,6 +39,7 @@ Widget::Widget(QWidget *parent) :
     QAction* action3 = toolbar->addAction("Azione 3");
 
     ui->menuLayout->insertWidget(0,toolbar);
+    //UI---------------------------------
 
     /*QMenuBar* menuBar = new QMenuBar(this);
     menuBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -62,6 +66,7 @@ Widget::Widget(QWidget *parent) :
     //menu->setGeometry(20,20,40,40);
     //ui->horizontalLayout->insertWidget(0,menu);
     //menu->setFixedSize(QSize(50, 25));
+
 
 }
 

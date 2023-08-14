@@ -20,7 +20,6 @@ private slots:
     //Main Menu Buttons
     void on_help_clicked();
 
-
     //welcomePage Button
     void on_startButton_clicked();
 

@@ -7,6 +7,11 @@
 #include <iostream>
 #include <QWidget>
 #include <qmenu.h>
+#include <regex>
+
+#include "utilityWidgets.h"
+//#include <QPolygonF>
+//#include <qtooltip.h>
 
 #include "functionAnalyzer/ast.h"
 #include "astGraphics.h"
@@ -20,19 +25,28 @@ class FormulaWidget : public QWidget
 public:
     explicit FormulaWidget(QWidget* parent = nullptr);
 
-    AST * ast;
-
+    TriangleWidget * getWarningTriangle(){
+        return this->warningTriangle;
+    }
 
 public slots:
-    // Слот для установки формулы
-
     void setFormula();
 
+signals:
+    void mouseMoved(const QPoint &position);
+
 protected:
+    void mouseMoveEvent(QMouseEvent *event) override {
+        emit mouseMoved(event->pos());
+    }
+
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
     ASTNodeGraphics * graphicsNode = nullptr;
+    AST * ast = nullptr;
+
+    TriangleWidget * warningTriangle = nullptr;
 
 };
 

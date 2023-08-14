@@ -31,6 +31,8 @@ public:
         number = num;
     }
 
+    ~NumberNodeGraphics() override {}
+
     void calculateSizes(sizes& sz,QPainter& p) override;
 
     void draw(QPoint& pos, QPainter& p) override;
@@ -46,6 +48,12 @@ public:
         QString o = QString::fromStdString(value);
         op = o;
     }
+
+    ~BinaryOperatorNodeGraphics() override {
+        delete left;
+        delete right;
+    }
+
     void draw(QPoint& pos, QPainter& p) override ;
 
     void calculateSizes(sizes& sz,QPainter& p) override;
@@ -79,7 +87,11 @@ public:
         name = n;
         argument = arg;
     }
-
+    ~SQRTNodeGraphics() override {
+        for(size_t i=0; i<this->argument.size(); i++){
+            delete argument[i];
+        }
+    }
     void calculateSizes(sizes& sz,QPainter& p) override;
     void draw(QPoint& pos, QPainter& p) override;
 };
@@ -90,6 +102,11 @@ public:
         QString n = QString::fromStdString(function);
         name = n;
         argument = arg;
+    }
+    ~FractionNodeGraphics() override {
+        for(size_t i=0; i<this->argument.size(); i++){
+            delete argument[i];
+        }
     }
 
     void calculateSizes(sizes& sz,QPainter& p) override;

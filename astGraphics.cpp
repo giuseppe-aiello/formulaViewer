@@ -33,11 +33,11 @@ int isArgumentFunction(ASTNodeGraphics *  node){
     int functions = 0;
 
     if(node == nullptr){
-        return functions;
+        return 0;
     }
 
     if(dynamic_cast<FunctionNodeGraphics*>(node)!=nullptr){
-        return functions+=1;
+        return 1;
     }else if(dynamic_cast<BinaryOperatorNodeGraphics*>(node)!=nullptr){
         BinaryOperatorNodeGraphics * op = static_cast<BinaryOperatorNodeGraphics*>(node);
         return functions = functions + isArgumentFunction(op->getLeft()) + isArgumentFunction(op->getRight());
@@ -144,10 +144,12 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
     QPoint posArgument;
 
     int valueHeight;
+    int valueWidth;
 
+    if(argument.size()==2){
     //SE CONTIENE DUE ARGOMENTI
-    ASTNodeGraphics * first = argument.back();
-    argument.pop_back();
+    ASTNodeGraphics * first = argument[1];
+
     if(isArgumentFunction(first)!=0){
         posArgument = QPoint(pos.x() + 12, pos.y() + 5);
         first->draw(posArgument, p);
@@ -161,23 +163,40 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
     //QPoint posArgument2 = posArgument;
     int x = posArgument.x() - pos.x();
-    int valueWidth = x; //viene calcolato la larghezza del disegno dell'argomento per poi disegnare la sqrt
+    valueWidth = x; //viene calcolato la larghezza del disegno dell'argomento per poi disegnare la sqrt
 
-    if(!argument.empty()){
-        NumberNodeGraphics * second = dynamic_cast<NumberNodeGraphics *>(argument.back());
-        if(second!=nullptr){
+    NumberNodeGraphics * second = dynamic_cast<NumberNodeGraphics *>(argument[0]);
+    if(second!=nullptr){
         QFont index("StyleNormal", 8);
         p.setFont(index);
         p.drawText(pos.x(), pos.y() + 3 + valueHeight / 2, second->number);
         QFont normal("StyleNormal", 10);
         p.setFont(normal);
         }
+    //SE CONTIENE UN ARGOMENTO
+    } else{
+        ASTNodeGraphics * first = argument[0];
+
+        if(isArgumentFunction(first)!=0){
+        posArgument = QPoint(pos.x() + 12, pos.y() + 5);
+        first->draw(posArgument, p);
+        valueHeight = 10 + first->misure.height;
+        } else{
+        posArgument = QPoint(pos.x() +12, pos.y());
+        first->draw(posArgument, p);
+        valueHeight =  first->misure.height;
+        }
+        this->misure.height = valueHeight;
+
+        int x = posArgument.x() - pos.x();
+        valueWidth = x;
     }
     p.drawLine(pos.x(), pos.y() + 4 + valueHeight / 2, pos.x() + 5, pos.y() + 4 + valueHeight);
     p.drawLine(pos.x() + 5, pos.y() + 4 + valueHeight, pos.x() + 10, pos.y() + 1);
     p.drawLine(pos.x() + 10, pos.y() + 1, pos.x() + 5 + valueWidth, pos.y() + 1);
 
     pos = QPoint(pos.x() + valueWidth + 5, pos.y());
+
 }
 
 
