@@ -23,8 +23,10 @@ ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node){
             }
         return new FractionNodeGraphics(functionName, argumentGraphics);
         }
-    } else {
-        return nullptr;
+    } else if(auto polynomial = dynamic_cast<PolynomialNode*>(node)){
+        return new PolynomialNodeGraphics(polynomial->getValue());
+    } else if(auto string = dynamic_cast<GenericStringNode*>(node)){
+        return new GenericStringNodeGraphics(string->getValue());
     }
 
 }
@@ -58,8 +60,8 @@ QPoint drawString(QString str, QPoint pos, QPainter& p){
 void NumberNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
 
     sz.width += p.fontMetrics().horizontalAdvance(this->number, -1);
-    if(sz.height < 5){
-        sz.height=5;
+    if(sz.height < p.fontMetrics().height()-4){
+        sz.height= p.fontMetrics().height()-4;
     }
     //std::cout << "NUMBER WIDTH = " << sz.wi
 }
@@ -74,18 +76,30 @@ void BinaryOperatorNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
         right->calculateSizes(sz, p);
 }
 
+void PolynomialNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
+
+    sz.width += p.fontMetrics().horizontalAdvance(this->polynomial, -1);
+    if(sz.height < 7){
+        sz.height=7;
+    }
+}
+
+void GenericStringNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
+
+    sz.width += p.fontMetrics().horizontalAdvance("error", -1);
+    if(sz.height < p.fontMetrics().height()-4){
+        sz.height= p.fontMetrics().height()-4;
+    }
+}
+
 void SQRTNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
-    sz.width += 12;
+    sz.width+=12;
+    sz.height+=4;
 
     size_t totArgs = this->argument.size();
     for(size_t i = 0 ; i<totArgs; i++){
         this->argument[i]->calculateSizes(sz, p);
     }
-
-    if(sz.height < 7){
-        sz.height=7;
-    }
-
 }
 
 void FractionNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
@@ -101,8 +115,8 @@ void FractionNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
     }
     else sz.width += denominator.width;
 
-    if(sz.height < 15){
-        sz.height=15;
+    if(sz.height < 25){
+        sz.height=25;
     }
 }
 
@@ -113,7 +127,7 @@ void NumberNodeGraphics::draw(QPoint& pos, QPainter& p) {
     //misure.width+=valueWidth;
     this->misure.height = valueHeight;
 
-    p.drawText(QRect(pos.x(), pos.y() + 4, pos.x() + valueWidth, pos.y() + 4 + valueHeight), number);
+    p.drawText(pos.x(), pos.y(), number);
     pos =QPoint(pos.x() + valueWidth, pos.y());
     //misure.width+= valueWidth;
 }
@@ -129,13 +143,58 @@ void BinaryOperatorNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
     left->draw(pos, p);
     pos = QPoint(pos.x() + 5, pos.y());
-    p.drawText(QRect(pos.x(), pos.y() + 4, pos.x() + 12 + valueWidth, pos.y() + 4 + valueHeight), op);
+    p.drawText(pos.x(), pos.y(), op);
     pos = QPoint(pos.x() + valueWidth + 5, pos.y());
     //misure.width+=valueWidth;
     right->draw(pos, p);
 
 }
 
+void PolynomialNodeGraphics::draw(QPoint& pos, QPainter& p) {
+
+    if(polynomial.count('^')!=0){
+        int valueHeight = p.fontMetrics().height();
+        //misure.width+=valueWidth;
+        this->misure.height = valueHeight;
+
+        QStringList list = polynomial.split('^');
+        //std::cout << "SIZE: " << list.size() << std::endl;
+        QString base = list[0];
+        QString potenza = list[1];
+
+        int valueWidthBase = p.fontMetrics().horizontalAdvance(base);
+        int valueWidthPotenza = p.fontMetrics().horizontalAdvance(potenza);
+        int valueWidth = valueWidthBase + valueWidthPotenza;
+
+        p.drawText(pos.x(), pos.y(), base);
+        QFont power("StyleNormal", 10);
+        p.setFont(power);
+        p.drawText(pos.x()+valueWidthBase, pos.y()-valueHeight/2, potenza);
+        QFont normal("StyleNormal", 11);
+        p.setFont(normal);
+        pos =QPoint(pos.x() + valueWidth-3, pos.y());
+
+    } else{
+        int valueHeight = p.fontMetrics().height();
+        this->misure.height = valueHeight;
+        int valueWidth = p.fontMetrics().horizontalAdvance(polynomial);
+        p.drawText(pos.x(),pos.y(), polynomial);
+        pos =QPoint(pos.x() + valueWidth, pos.y());
+    }
+    //misure.width+= valueWidth;
+}
+
+void GenericStringNodeGraphics::draw(QPoint& pos, QPainter& p) {
+
+    int valueWidth = p.fontMetrics().horizontalAdvance("error");
+    int valueHeight = p.fontMetrics().height();
+    //misure.width+=valueWidth;
+    this->misure.height = valueHeight;
+
+    p.drawText(pos.x(), pos.y(), "error");
+    pos =QPoint(pos.x() + valueWidth, pos.y());
+    //misure.width+= valueWidth;
+}
 
 void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
     //pos non viene modificato, e viene inizializzato posArgument = pos attuale
@@ -151,13 +210,17 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
     ASTNodeGraphics * first = argument[1];
 
     if(isArgumentFunction(first)!=0){
-        posArgument = QPoint(pos.x() + 12, pos.y() + 5);
+        posArgument = QPoint(pos.x() + 12, pos.y());
         first->draw(posArgument, p);
-        valueHeight = 10 + first->misure.height;
+        sizes size;
+        first->calculateSizes(size, p);
+        valueHeight = size.height;
     } else{
         posArgument = QPoint(pos.x() +12, pos.y());
         first->draw(posArgument, p);
-        valueHeight =  first->misure.height;
+        sizes size;
+        first->calculateSizes(size, p);
+        valueHeight = size.height;
     }
     this->misure.height = valueHeight;
 
@@ -167,10 +230,10 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
     NumberNodeGraphics * second = dynamic_cast<NumberNodeGraphics *>(argument[0]);
     if(second!=nullptr){
-        QFont index("StyleNormal", 8);
+        QFont index("StyleNormal", 9);
         p.setFont(index);
-        p.drawText(pos.x(), pos.y() + 3 + valueHeight / 2, second->number);
-        QFont normal("StyleNormal", 10);
+        p.drawText(pos.x() + 1, pos.y() - 3 - valueHeight / 2, second->number);
+        QFont normal("StyleNormal", 11);
         p.setFont(normal);
         }
     //SE CONTIENE UN ARGOMENTO
@@ -178,22 +241,26 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
         ASTNodeGraphics * first = argument[0];
 
         if(isArgumentFunction(first)!=0){
-        posArgument = QPoint(pos.x() + 12, pos.y() + 5);
+        posArgument = QPoint(pos.x() + 12, pos.y());
         first->draw(posArgument, p);
-        valueHeight = 10 + first->misure.height;
+        sizes size;
+        first->calculateSizes(size, p);
+        valueHeight = size.height;
         } else{
         posArgument = QPoint(pos.x() +12, pos.y());
         first->draw(posArgument, p);
-        valueHeight =  first->misure.height;
+        sizes size;
+        first->calculateSizes(size, p);
+        valueHeight = size.height;
         }
         this->misure.height = valueHeight;
 
         int x = posArgument.x() - pos.x();
         valueWidth = x;
     }
-    p.drawLine(pos.x(), pos.y() + 4 + valueHeight / 2, pos.x() + 5, pos.y() + 4 + valueHeight);
-    p.drawLine(pos.x() + 5, pos.y() + 4 + valueHeight, pos.x() + 10, pos.y() + 1);
-    p.drawLine(pos.x() + 10, pos.y() + 1, pos.x() + 5 + valueWidth, pos.y() + 1);
+    p.drawLine(pos.x(), pos.y() - 4 - valueHeight/2, pos.x() + 5, pos.y());
+    p.drawLine(pos.x() + 5, pos.y(), pos.x() + 10, pos.y()- 4 - valueHeight);
+    p.drawLine(pos.x() + 10, pos.y() - 4 - valueHeight, pos.x() + 5 + valueWidth, pos.y() - 4 - valueHeight);
 
     pos = QPoint(pos.x() + valueWidth + 5, pos.y());
 
@@ -202,7 +269,7 @@ void SQRTNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
 void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
-    pos = QPoint(pos.x(), pos.y());
+    pos = QPoint(pos.x(), pos.y() - 4);
     QPoint posNumerator;
     QPoint posDenominator;
 
@@ -222,27 +289,31 @@ void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
     if(numSizes.width>denSizes.width){
 
-        posNumerator = QPoint(pos.x(), pos.y()-10- numSizes.height);
+        if(dynamic_cast<FractionNodeGraphics*>(numerator)!=nullptr) posNumerator=  QPoint(pos.x(), pos.y()- numSizes.height);
+        else posNumerator = QPoint(pos.x(), pos.y()- 10);
         numerator->draw(posNumerator, p);
 
         int centeredX= (numSizes.width - denSizes.width) /2;
-        posDenominator = QPoint(pos.x() + centeredX, pos.y()+10 + denSizes.height);
+        posDenominator = QPoint(pos.x() + centeredX, pos.y()+ denSizes.height + 5 );
         denominator->draw(posDenominator, p);
 
-        p.drawLine(pos.x(), pos.y()+10, posNumerator.x(), pos.y()+10);
-        pos = QPoint(pos.x() + numSizes.width, pos.y());
+        p.drawLine(pos.x(), pos.y()-2, posNumerator.x(), pos.y()-2);
+        pos = QPoint(pos.x() + numSizes.width+3, pos.y()+4);
 
-    }else{
+    }else{ // frac(frac(3993, 3939), frac(33939, 39393))
 
-        posDenominator = QPoint(pos.x(), pos.y()+8 + denSizes.height);
+        posDenominator = QPoint(pos.x(), pos.y()+ denSizes.height + 5);
         denominator->draw(posDenominator, p);
 
         int centeredX= (denSizes.width - numSizes.width) /2;
-        posNumerator = QPoint(pos.x() + centeredX, pos.y()-10 - numSizes.height);
+
+
+        if(dynamic_cast<FractionNodeGraphics*>(numerator)!=nullptr) posNumerator=QPoint(pos.x() + centeredX, pos.y() -numSizes.height);
+        else posNumerator = QPoint(pos.x() + centeredX, pos.y()- 10);
         numerator->draw(posNumerator, p);
 
-        p.drawLine(pos.x(),pos.y()+ 10, posDenominator.x(), pos.y()+10);
-        pos = QPoint(pos.x() + denSizes.width, pos.y());
+        p.drawLine(pos.x(),pos.y() - 2, posDenominator.x(), pos.y()-2);
+        pos = QPoint(pos.x() + denSizes.width+3, pos.y()+4);
 
     }
 

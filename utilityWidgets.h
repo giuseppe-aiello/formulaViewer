@@ -15,9 +15,9 @@ public:
 
     void paintEvent(QPaintEvent *){
 
-        topPoint = QPointF(pos.x() + 10 + 10, pos.y() );
-        leftPoint = QPointF(pos.x() + 10 , pos.y() + 20);
-        rightPoint= QPointF(pos.x()+ 10 +20, pos.y() + 20);
+        topPoint = QPointF(pos.x() + 10 + 10, pos.y() -20);
+        leftPoint = QPointF(pos.x() + 10 , pos.y());
+        rightPoint= QPointF(pos.x()+ 10 +20, pos.y());
 
         QPolygonF triangle;
         triangle << topPoint << leftPoint << rightPoint;
@@ -31,12 +31,13 @@ public:
             pen.setWidth(2);
             p->setPen(pen);
 
-            p->drawLine(pos.x() + 20, pos.y() + 13, pos.x() + 20, pos.y()+5);
-            QPointF pointPosition(pos.x() + 20, pos.y() + 17);
+            //linea esclamativa
+            p->drawLine(pos.x() + 20, pos.y() - 15, pos.x() + 20, pos.y()-7);
+            QPointF pointPosition(pos.x() + 20, pos.y() - 3);
 
             int pointDiameter = 1;
 
-            // Calcola rettangolo dell'ellisse (circonferenza del punto)
+            // punto dell'esclamativo
             QRectF pointRect(pointPosition.x() - pointDiameter / 2.0,
                              pointPosition.y() - pointDiameter / 2.0,
                              pointDiameter, pointDiameter);
@@ -78,19 +79,20 @@ public:
     }
 
 public slots:
+
     void handleMouseMoved(const QPoint &position) {
 
         if(type!=0){
-        bool isHovered = pointInTriangle(position, topPoint, leftPoint, rightPoint);
+            bool isHovered = pointInTriangle(position, topPoint, leftPoint, rightPoint);
 
-        if (isHovered) {
-            changeToolTipStyle();
-            QToolTip::showText(mapToGlobal(QPoint(static_cast<int>(topPoint.x()), static_cast<int>(topPoint.y() + 40))), this->warningMessage, this, QRect(), 3000);
-            //QToolTip::setPalette(QApplication::palette()); // Reimposta il palette dei tooltip a quello predefinito
+            if (isHovered){
+                changeToolTipStyle();
+                QToolTip::showText(mapToGlobal(QPoint(static_cast<int>(topPoint.x()), static_cast<int>(topPoint.y() + 40))), this->warningMessage, this, QRect(), 3000);
+                //QToolTip::setPalette(QApplication::palette()); // Reimposta il palette dei tooltip a quello predefinito
 
-        } else {
-            QToolTip::hideText();
-        }
+            }else{
+                QToolTip::hideText();
+            }
         }
     }
 
@@ -115,6 +117,7 @@ private:
     QPointF rightPoint;
 
     bool pointInTriangle(const QPointF &p, const QPointF &p0, const QPointF &p1, const QPointF &p2) {
+        //SPIEGAZIONE NEL FILE COOR_BARICENTRICHE
         // Calcola le coordinate baricentriche del punto p rispetto ai vertici del triangolo
         float alpha = ((p1.y() - p2.y()) * (p.x() - p2.x()) + (p2.x() - p1.x()) * (p.y() - p2.y())) /
                       ((p1.y() - p2.y()) * (p0.x() - p2.x()) + (p2.x() - p1.x()) * (p0.y() - p2.y()));
@@ -125,7 +128,9 @@ private:
         float gamma = 1.0 - alpha - beta;
 
         // Verifica se le coordinate baricentriche sono all'interno del triangolo
-        return alpha >= 0 && beta >= 0 && gamma >= 0; // Da personalizzare con l'algoritmo di verifica del punto all'interno del triangolo
+        return alpha >= 0 && beta >= 0 && gamma >= 0;
+        //Se tutte e tre le coordinate baricentriche sono non negative, allora il punto p si trova all'interno
+        //del triangolo. Altrimenti, non è all'interno del triangolo.
     }
 };
 

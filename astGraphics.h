@@ -80,6 +80,41 @@ protected:
     std::vector<ASTNodeGraphics*> argument;
 };
 
+class PolynomialNodeGraphics : public ASTNodeGraphics {
+public:
+    PolynomialNodeGraphics(std::string value) {
+        QString pol = QString::fromStdString(value);
+        polynomial = pol;
+    }
+
+    ~PolynomialNodeGraphics() override {}
+
+    void calculateSizes(sizes& sz,QPainter& p) override;
+
+    void draw(QPoint& pos, QPainter& p) override;
+
+public:
+    QString polynomial;
+};
+
+
+class GenericStringNodeGraphics : public ASTNodeGraphics {
+public:
+    GenericStringNodeGraphics(std::string value) {
+        QString str = QString::fromStdString(value);
+        string = str;
+    }
+
+    ~GenericStringNodeGraphics() override {}
+
+    void calculateSizes(sizes& sz,QPainter& p) override;
+
+    void draw(QPoint& pos, QPainter& p) override;
+
+public:
+    QString string;
+};
+
 class SQRTNodeGraphics : public FunctionNodeGraphics {
 public:
     SQRTNodeGraphics(std::string function, std::vector<ASTNodeGraphics*> arg) {
@@ -116,6 +151,7 @@ public:
 ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node);
 
 int isArgumentFunction(ASTNodeGraphics *  node);
+
 
 
 #endif // ASTGRAPHICS_H

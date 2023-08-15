@@ -47,13 +47,20 @@ void FormulaWidget::setFormula()
         return;
     }
 
+    if(testo.endsWith('^')){
+        warningTriangle->setType(4);
+        update();
+        return;
+    }
+
     std::string text = testo.toStdString();
     std::vector<std::string> tokens = tokenizeExpression(text);
 
     //Controllo ultimo token
     std::string last_token = tokens.back();
 
-    std::regex patternOne(R"([a-z]+)");
+
+    std::regex patternOne(R"((sqrt|frac).*)");
     if(std::regex_match(last_token, patternOne)){
         warningTriangle->setType(3);
         update();
@@ -74,7 +81,7 @@ void FormulaWidget::paintEvent(QPaintEvent* event)
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing);
     p.setPen(Qt::black);
-    QFont normal("StyleNormal", 10);
+    QFont normal("StyleNormal", 11);
     p.setFont(normal);
     QPoint formulaPos(5, 50);
 
@@ -104,15 +111,21 @@ void FormulaWidget::paintEvent(QPaintEvent* event)
             warningTriangle->setWarningMessage("Warning: Incomplete function");
             warningTriangle->paintEvent(event);
             break;
+        case 4:
+            warningTriangle->setPainter(&p);
+            warningTriangle->setPos(formulaPos);
+            warningTriangle->setWarningMessage("Warning: Missing degree of monomial");
+            warningTriangle->paintEvent(event);
+            break;
 
         }
+        }
+
 
     }
     //delete this->ast;
     //if(this->ast->getRoot()!=nullptr) delete this->ast;
 
-
-}
 
 
 
