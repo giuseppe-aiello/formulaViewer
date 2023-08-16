@@ -1,32 +1,35 @@
 #include "astGraphics.h"
 
-ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node){
+#include "FormulaWidget.h"
+
+
+ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node, FormulaWidget * ptr){
     if(auto number = dynamic_cast<NumberNode*>(node)){
         return new NumberNodeGraphics(number->getValue());
     }else if(auto operatore = dynamic_cast<BinaryOperatorNode*>(node)){
         std::string op = operatore->getOp();
-        ASTNodeGraphics* leftGraphics = createNodeGraphicsFromAST(operatore->getLeft());
-        ASTNodeGraphics* rightGraphics = createNodeGraphicsFromAST(operatore->getRight());
+        ASTNodeGraphics* leftGraphics = createNodeGraphicsFromAST(operatore->getLeft(), ptr);
+        ASTNodeGraphics* rightGraphics = createNodeGraphicsFromAST(operatore->getRight(), ptr);
         return new BinaryOperatorNodeGraphics(op, leftGraphics, rightGraphics);
     }else if(auto funzione = dynamic_cast<FunctionNode*>(node)){
         std::string functionName = funzione->getFunction();
         if(functionName == "sqrt"){
             std::vector<ASTNodeGraphics*> argumentGraphics;
             for(size_t i=0; i< funzione->getArgs().size(); i++){
-                argumentGraphics.push_back(createNodeGraphicsFromAST(funzione->getArgs()[i]));
+                argumentGraphics.push_back(createNodeGraphicsFromAST(funzione->getArgs()[i], ptr));
             }
         return new SQRTNodeGraphics(functionName, argumentGraphics);
         } else if(functionName == "frac"){
             std::vector<ASTNodeGraphics*> argumentGraphics;
             for(size_t i=0; i< funzione->getArgs().size(); i++){
-                argumentGraphics.push_back(createNodeGraphicsFromAST(funzione->getArgs()[i]));
+                argumentGraphics.push_back(createNodeGraphicsFromAST(funzione->getArgs()[i], ptr));
             }
         return new FractionNodeGraphics(functionName, argumentGraphics);
         }
     } else if(auto polynomial = dynamic_cast<PolynomialNode*>(node)){
         return new PolynomialNodeGraphics(polynomial->getValue());
     } else if(auto string = dynamic_cast<GenericStringNode*>(node)){
-        return new GenericStringNodeGraphics(string->getValue());
+        return new InvalidNodeGraphics(string->getValue(), ptr);
     }
 
 }
@@ -45,16 +48,6 @@ int isArgumentFunction(ASTNodeGraphics *  node){
         return functions = functions + isArgumentFunction(op->getLeft()) + isArgumentFunction(op->getRight());
     } else return functions;
 
-}
-
-QPoint drawString(QString str, QPoint pos, QPainter& p){
-
-    int valueWidth = p.fontMetrics().horizontalAdvance(str);
-    int valueHeight = p.fontMetrics().height();
-
-    p.drawText(QRect(pos.x() + 12, pos.y() + 4, pos.x() + 12 + valueWidth, pos.y() + 4 + valueHeight), str);
-    pos = QPoint(pos.x() + valueWidth + 5, pos.y());
-    return pos;
 }
 
 void NumberNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
@@ -84,9 +77,9 @@ void PolynomialNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
     }
 }
 
-void GenericStringNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
+void InvalidNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
 
-    sz.width += p.fontMetrics().horizontalAdvance("error", -1);
+    sz.width += p.fontMetrics().horizontalAdvance("invalid", -1);
     if(sz.height < p.fontMetrics().height()-4){
         sz.height= p.fontMetrics().height()-4;
     }
@@ -184,14 +177,17 @@ void PolynomialNodeGraphics::draw(QPoint& pos, QPainter& p) {
     //misure.width+= valueWidth;
 }
 
-void GenericStringNodeGraphics::draw(QPoint& pos, QPainter& p) {
+void InvalidNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
-    int valueWidth = p.fontMetrics().horizontalAdvance("error");
+    int valueWidth = p.fontMetrics().horizontalAdvance("invalid");
     int valueHeight = p.fontMetrics().height();
     //misure.width+=valueWidth;
     this->misure.height = valueHeight;
 
-    p.drawText(pos.x(), pos.y(), "error");
+    rect->setSettings(&p, pos, string);
+    p.drawText(pos.x(), pos.y(), "invalid");
+
+
     pos =QPoint(pos.x() + valueWidth, pos.y());
     //misure.width+= valueWidth;
 }
@@ -333,3 +329,12 @@ void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
 }
 
+InvalidNodeGraphics::InvalidNodeGraphics(std::string value, FormulaWidget *ptr){
+        QString str = QString::fromStdString(value);
+
+        string = str;
+        pointer = ptr;
+        rect = new RectWidget();
+        //std::cout << "POINTER IN invalidnode: " << ptr << std::endl;
+        QObject::connect(pointer, &FormulaWidget::mouseMoved, rect, &RectWidget::handleMouseMoved);
+    }

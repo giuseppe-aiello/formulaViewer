@@ -1,6 +1,7 @@
 #ifndef FORMULAWIDGET_H
 #define FORMULAWIDGET_H
 
+
 #include <QPainter>
 #include <QStyleOption>
 #include <QLineEdit>
@@ -14,9 +15,10 @@
 //#include <qtooltip.h>
 
 #include "functionAnalyzer/ast.h"
-#include "astGraphics.h"
+//#include "astGraphics.h"
 #include "functionAnalyzer/tokenizer.h"
 
+class ASTNodeGraphics;
 
 class FormulaWidget : public QWidget
 {

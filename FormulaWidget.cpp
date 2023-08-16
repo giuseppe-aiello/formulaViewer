@@ -1,10 +1,14 @@
 #include "FormulaWidget.h"
 
+#include "astGraphics.h"
+
+
 FormulaWidget::FormulaWidget(QWidget* parent) :
     BaseClass(parent)
 {
     setMouseTracking(true); // Attiva il tracciamento del mouse per rilevare il movimento anche senza clic
     warningTriangle = new TriangleWidget(); //Crea un istanza di triangolo
+
     QPalette pal = palette();
     pal.setColor(QPalette::Window, Qt::white);
     setAutoFillBackground(true);
@@ -68,7 +72,7 @@ void FormulaWidget::setFormula()
     }
 
     this->ast = buildAST(tokens);
-    this->graphicsNode = createNodeGraphicsFromAST(ast->getRoot());
+    this->graphicsNode = createNodeGraphicsFromAST(ast->getRoot(), this);
     //con update chiamiamo indirettamente l'evento paintEvent, che disegnerà le nostre formule
     //su widget
     warningTriangle->setType(0);

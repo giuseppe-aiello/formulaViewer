@@ -134,4 +134,67 @@ private:
     }
 };
 
+
+class RectWidget : public QWidget {
+
+public:
+    RectWidget(QWidget *parent = nullptr) : QWidget(parent) {}
+
+    void setSettings(QPainter* painter, QPoint position, QString str){
+        p= painter;
+        pos = position;
+        invalidStr = str;
+
+        topLeft = QPoint(pos.x(), pos.y());
+        bottomRight = QPoint(pos.x()+p->fontMetrics().horizontalAdvance("invalid"), pos.y()+p->fontMetrics().height());
+
+        beenSet = true;
+    }
+
+
+public slots:
+
+    void handleMouseMoved(const QPoint &position) {
+
+        bool isHovered = pointInRectangle(position, topLeft, bottomRight);
+        //std::cout << "BOOL: "<<isHovered <<std::endl;
+        std::cout << position.x() << ":" << pos.y() << std::endl;
+        if (isHovered){
+            changeToolTipStyle();
+            QToolTip::showText(mapToGlobal(QPoint(static_cast<int>(topLeft.x()), static_cast<int>(topLeft.y()+40))), "ERROR", this, QRect(), 3000);
+            //QToolTip::setPalette(QApplication::palette()); // Reimposta il palette dei tooltip a quello predefinito
+
+        }else{
+            QToolTip::hideText();
+        }
+    }
+
+
+protected:
+
+    void changeToolTipStyle() {
+        QPalette palette;
+        palette.setColor(QPalette::ToolTipBase, Qt::gray); // Cambia il colore dello sfondo
+        palette.setColor(QPalette::ToolTipText, Qt::black); // Cambia il colore del testo
+
+        QToolTip::setPalette(palette);
+    }
+
+private:
+
+    QPainter *p = nullptr;
+    QPoint pos;
+    QString invalidStr;
+
+    QPoint topLeft;
+    QPoint bottomRight;
+
+    bool beenSet = false;
+
+    bool pointInRectangle(const QPointF &p, const QPointF &topLeft, const QPointF &bottomRight) {
+        return p.x() >= topLeft.x() && p.x() <= bottomRight.x() &&
+               p.y() >= topLeft.y() && p.y() <= bottomRight.y();
+    }
+};
+
 #endif // UTILITYWIDGETS_H

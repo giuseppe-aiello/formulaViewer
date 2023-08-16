@@ -10,8 +10,11 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    std::cout << "POINTER IN widget: " << ui->formulaWidget << std::endl;
+
     connect(ui->lineEdit, &QLineEdit::textChanged, ui->formulaWidget, &FormulaWidget::setFormula);
     connect(ui->formulaWidget, &FormulaWidget::mouseMoved, ui->formulaWidget->getWarningTriangle(), &TriangleWidget::handleMouseMoved);
+    //connect(ui->formulaWidget, &FormulaWidget::mouseMoved, ui->formulaWidget->getWarningTriangle(), &TriangleWidget::handleMouseMoved);
 
 
     //UI---------------------------------

@@ -7,13 +7,14 @@
 #include <QStyleOption>
 #include <QWidget>
 #include "ast.h"
+#include "utilityWidgets.h"
+
+class FormulaWidget;
 
 struct sizes{
     int width=0;
     int height=0;
 };
-
-QPoint drawString(QString str, QPoint pos, QPainter& p);
 
 
 class ASTNodeGraphics {
@@ -98,14 +99,11 @@ public:
 };
 
 
-class GenericStringNodeGraphics : public ASTNodeGraphics {
+class InvalidNodeGraphics : public ASTNodeGraphics {
 public:
-    GenericStringNodeGraphics(std::string value) {
-        QString str = QString::fromStdString(value);
-        string = str;
-    }
+    InvalidNodeGraphics(std::string value, FormulaWidget * ptr);
 
-    ~GenericStringNodeGraphics() override {}
+    ~InvalidNodeGraphics() override {}
 
     void calculateSizes(sizes& sz,QPainter& p) override;
 
@@ -113,6 +111,10 @@ public:
 
 public:
     QString string;
+
+private:
+    FormulaWidget * pointer = nullptr;
+    RectWidget * rect = nullptr;
 };
 
 class SQRTNodeGraphics : public FunctionNodeGraphics {
@@ -148,7 +150,7 @@ public:
     void draw(QPoint& pos, QPainter& p) override;
 };
 
-ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node);
+ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node, FormulaWidget * ptr);
 
 int isArgumentFunction(ASTNodeGraphics *  node);
 
