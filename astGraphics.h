@@ -6,6 +6,7 @@
 #include <QTextDocument>
 #include <QStyleOption>
 #include <QWidget>
+
 #include "ast.h"
 #include "utilityWidgets.h"
 
@@ -23,6 +24,39 @@ public:
     virtual void draw(QPoint& pos, QPainter& p) = 0;
     virtual void calculateSizes(sizes& sz, QPainter& p) = 0;
     sizes misure;
+};
+/*
+class LineBreakNodeGraphics : public ASTNodeGraphics {
+public:
+    LineBreakNodeGraphics(){}
+
+    ~LineBreakNodeGraphics() override {
+        // delete pointer;
+    }
+
+    void calculateSizes(sizes& sz,QPainter& p) override;
+
+    void draw(QPoint& pos, QPainter& p) override;
+};*/
+
+class InvalidNodeGraphics : public ASTNodeGraphics {
+public:
+    InvalidNodeGraphics(std::string value, FormulaWidget * ptr);
+
+    ~InvalidNodeGraphics() override {
+        // delete pointer;
+    }
+
+    void calculateSizes(sizes& sz,QPainter& p) override;
+
+    void draw(QPoint& pos, QPainter& p) override;
+
+public:
+    QString string;
+
+private:
+    FormulaWidget * pointer = nullptr;
+    RectWidget rect;
 };
 
 class NumberNodeGraphics : public ASTNodeGraphics {
@@ -52,7 +86,9 @@ public:
 
     ~BinaryOperatorNodeGraphics() override {
         delete left;
+        left = nullptr;
         delete right;
+        right = nullptr;
     }
 
     void draw(QPoint& pos, QPainter& p) override ;
@@ -96,25 +132,6 @@ public:
 
 public:
     QString polynomial;
-};
-
-
-class InvalidNodeGraphics : public ASTNodeGraphics {
-public:
-    InvalidNodeGraphics(std::string value, FormulaWidget * ptr);
-
-    ~InvalidNodeGraphics() override {}
-
-    void calculateSizes(sizes& sz,QPainter& p) override;
-
-    void draw(QPoint& pos, QPainter& p) override;
-
-public:
-    QString string;
-
-private:
-    FormulaWidget * pointer = nullptr;
-    RectWidget * rect = nullptr;
 };
 
 class SQRTNodeGraphics : public FunctionNodeGraphics {

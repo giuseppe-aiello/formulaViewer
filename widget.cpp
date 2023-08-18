@@ -10,11 +10,9 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    std::cout << "POINTER IN widget: " << ui->formulaWidget << std::endl;
 
     connect(ui->lineEdit, &QLineEdit::textChanged, ui->formulaWidget, &FormulaWidget::setFormula);
     connect(ui->formulaWidget, &FormulaWidget::mouseMoved, ui->formulaWidget->getWarningTriangle(), &TriangleWidget::handleMouseMoved);
-    //connect(ui->formulaWidget, &FormulaWidget::mouseMoved, ui->formulaWidget->getWarningTriangle(), &TriangleWidget::handleMouseMoved);
 
 
     //UI---------------------------------
@@ -31,8 +29,12 @@ Widget::Widget(QWidget *parent) :
     QMenu* dropdownMenu = new QMenu(this);
 
     // Crea le azioni del menu
-    QAction* actionForFile1 = dropdownMenu->addAction("Azione 1");
-    QAction* actionForFile2 = dropdownMenu->addAction("Azione 2");
+    QAction* saveAction = dropdownMenu->addAction("Save");
+    saveAction->setStatusTip(tr("Save the file"));
+    connect(saveAction, &QAction::triggered, this, &Widget::saveFile);
+    QAction* openAction = dropdownMenu->addAction("Open");
+    openAction->setStatusTip(tr("Open a file"));
+    connect(openAction, &QAction::triggered, this, &Widget::openFile);
 
     menuButton->setMenu(dropdownMenu);
 

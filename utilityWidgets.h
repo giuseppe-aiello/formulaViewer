@@ -13,6 +13,8 @@ class TriangleWidget : public QWidget {
 public:
     TriangleWidget(QWidget *parent = nullptr) : QWidget(parent) {}
 
+    ~TriangleWidget(){}
+
     void paintEvent(QPaintEvent *){
 
         topPoint = QPointF(pos.x() + 10 + 10, pos.y() -20);
@@ -140,13 +142,15 @@ class RectWidget : public QWidget {
 public:
     RectWidget(QWidget *parent = nullptr) : QWidget(parent) {}
 
+    ~RectWidget(){}
+
     void setSettings(QPainter* painter, QPoint position, QString str){
         p= painter;
         pos = position;
         invalidStr = str;
 
-        topLeft = QPoint(pos.x(), pos.y());
-        bottomRight = QPoint(pos.x()+p->fontMetrics().horizontalAdvance("invalid"), pos.y()+p->fontMetrics().height());
+        topLeft = QPoint(pos.x(), pos.y()-p->fontMetrics().height());
+        bottomRight = QPoint(pos.x()+p->fontMetrics().horizontalAdvance("invalid"), pos.y());
 
         beenSet = true;
     }
@@ -158,10 +162,9 @@ public slots:
 
         bool isHovered = pointInRectangle(position, topLeft, bottomRight);
         //std::cout << "BOOL: "<<isHovered <<std::endl;
-        std::cout << position.x() << ":" << pos.y() << std::endl;
         if (isHovered){
             changeToolTipStyle();
-            QToolTip::showText(mapToGlobal(QPoint(static_cast<int>(topLeft.x()), static_cast<int>(topLeft.y()+40))), "ERROR", this, QRect(), 3000);
+            QToolTip::showText(mapToGlobal(QPoint(static_cast<int>(topLeft.x()), static_cast<int>(topLeft.y()+50))), "Invalid string: "+invalidStr, this, QRect(), -1);
             //QToolTip::setPalette(QApplication::palette()); // Reimposta il palette dei tooltip a quello predefinito
 
         }else{
@@ -174,8 +177,8 @@ protected:
 
     void changeToolTipStyle() {
         QPalette palette;
-        palette.setColor(QPalette::ToolTipBase, Qt::gray); // Cambia il colore dello sfondo
-        palette.setColor(QPalette::ToolTipText, Qt::black); // Cambia il colore del testo
+        palette.setColor(QPalette::ToolTipBase, Qt::white); // Cambia il colore dello sfondo
+        palette.setColor(QPalette::ToolTipText, Qt::red); // Cambia il colore del testo
 
         QToolTip::setPalette(palette);
     }

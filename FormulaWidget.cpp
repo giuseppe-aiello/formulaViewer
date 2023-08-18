@@ -1,7 +1,5 @@
 #include "FormulaWidget.h"
-
 #include "astGraphics.h"
-
 
 FormulaWidget::FormulaWidget(QWidget* parent) :
     BaseClass(parent)
@@ -42,6 +40,11 @@ void FormulaWidget::setFormula()
         return;
     }
 
+    if( testo.endsWith('#')){
+        update();
+        return;
+    }
+
     //Controllo parentesi aperta ma non chiusa
     int openParentheses = testo.count('(');
     int closeParentheses = testo.count(')');
@@ -71,8 +74,20 @@ void FormulaWidget::setFormula()
         return;
     }
 
+
+    if(ast!=nullptr){
+        delete ast;
+        ast = nullptr;
+    }
+
+    if(graphicsNode!=nullptr){
+        delete graphicsNode;
+        graphicsNode=nullptr;
+    }
+
     this->ast = buildAST(tokens);
     this->graphicsNode = createNodeGraphicsFromAST(ast->getRoot(), this);
+
     //con update chiamiamo indirettamente l'evento paintEvent, che disegnerà le nostre formule
     //su widget
     warningTriangle->setType(0);

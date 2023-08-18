@@ -7,7 +7,7 @@
 #include <QLineEdit>
 #include <iostream>
 #include <QWidget>
-#include <qmenu.h>
+#include <QMenu>
 #include <regex>
 
 #include "utilityWidgets.h"

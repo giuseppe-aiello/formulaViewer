@@ -30,7 +30,9 @@ ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node, FormulaWidget * ptr)
         return new PolynomialNodeGraphics(polynomial->getValue());
     } else if(auto string = dynamic_cast<GenericStringNode*>(node)){
         return new InvalidNodeGraphics(string->getValue(), ptr);
-    }
+    } /*else if(auto linebreak = dynamic_cast<LineBreakNode*>(node)){
+        return new LineBreakNodeGraphics();
+    }*/
 
 }
 
@@ -77,13 +79,6 @@ void PolynomialNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
     }
 }
 
-void InvalidNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
-
-    sz.width += p.fontMetrics().horizontalAdvance("invalid", -1);
-    if(sz.height < p.fontMetrics().height()-4){
-        sz.height= p.fontMetrics().height()-4;
-    }
-}
 
 void SQRTNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
     sz.width+=12;
@@ -128,6 +123,7 @@ void NumberNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
 void BinaryOperatorNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
+    if(isOperator(op.toStdString())){
     int valueWidth = p.fontMetrics().horizontalAdvance(op);
     int valueHeight = p.fontMetrics().height();
     this->misure.height = valueHeight;
@@ -140,6 +136,11 @@ void BinaryOperatorNodeGraphics::draw(QPoint& pos, QPainter& p) {
     pos = QPoint(pos.x() + valueWidth + 5, pos.y());
     //misure.width+=valueWidth;
     right->draw(pos, p);
+    } else if (isLineBreak(op.toStdString())){
+        left->draw(pos, p);
+        pos = QPoint(5, pos.y()+50);
+        right->draw(pos, p);
+    }
 
 }
 
@@ -174,21 +175,6 @@ void PolynomialNodeGraphics::draw(QPoint& pos, QPainter& p) {
         p.drawText(pos.x(),pos.y(), polynomial);
         pos =QPoint(pos.x() + valueWidth, pos.y());
     }
-    //misure.width+= valueWidth;
-}
-
-void InvalidNodeGraphics::draw(QPoint& pos, QPainter& p) {
-
-    int valueWidth = p.fontMetrics().horizontalAdvance("invalid");
-    int valueHeight = p.fontMetrics().height();
-    //misure.width+=valueWidth;
-    this->misure.height = valueHeight;
-
-    rect->setSettings(&p, pos, string);
-    p.drawText(pos.x(), pos.y(), "invalid");
-
-
-    pos =QPoint(pos.x() + valueWidth, pos.y());
     //misure.width+= valueWidth;
 }
 
@@ -313,28 +299,48 @@ void FractionNodeGraphics::draw(QPoint& pos, QPainter& p) {
 
     }
 
-    /*
-    int x = posNumerator.x()  - pos.x() ;
-    int y = posDenominator.x() - pos.x() ;
-    int width;
-    if(x>y) {
-        width = x;
-        p.drawLine(pos.x(), posNumerator.y()+2, posNumerator.x(), posNumerator.y()+2);
-        //p.drawRect(pos.x(), pos.y() - 10, posDenominator.x() - pos.x(), denominator->misure.height);
-    }
-    else{
-        width = y;
-        p.drawLine(pos.x(), posNumerator.y()+2, posDenominator.x(), posNumerator.y()+2);
-    }*/
-
 }
+
+
+void InvalidNodeGraphics::calculateSizes(sizes& sz, QPainter& p){
+
+    sz.width += p.fontMetrics().horizontalAdvance("invalid", -1);
+    if(sz.height < p.fontMetrics().height()-4){
+        sz.height= p.fontMetrics().height()-4;
+    }
+}
+
+
+void InvalidNodeGraphics::draw(QPoint& pos, QPainter& p) {
+
+    int valueWidth = p.fontMetrics().horizontalAdvance("invalid");
+    int valueHeight = p.fontMetrics().height();
+    //misure.width+=valueWidth;
+    this->misure.height = valueHeight;
+
+    rect.setSettings(&p, pos, string);
+    p.drawText(pos.x(), pos.y(), "invalid");
+
+
+    pos =QPoint(pos.x() + valueWidth, pos.y());
+    //misure.width+= valueWidth;
+}
+
 
 InvalidNodeGraphics::InvalidNodeGraphics(std::string value, FormulaWidget *ptr){
         QString str = QString::fromStdString(value);
-
         string = str;
         pointer = ptr;
-        rect = new RectWidget();
         //std::cout << "POINTER IN invalidnode: " << ptr << std::endl;
-        QObject::connect(pointer, &FormulaWidget::mouseMoved, rect, &RectWidget::handleMouseMoved);
+        QObject::connect(pointer, &FormulaWidget::mouseMoved, &rect, &RectWidget::handleMouseMoved);
     }
+/*
+void LineBreakNodeGraphics::calculateSizes(sizes &sz, QPainter &p){
+        return;
+}
+
+void LineBreakNodeGraphics::draw(QPoint &pos, QPainter &p){
+        pos = QPoint(5, pos.y()+50);
+    }*/
+
+
