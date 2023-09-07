@@ -89,7 +89,7 @@ public slots:
 
             if (isHovered){
                 changeToolTipStyle();
-                QToolTip::showText(mapToGlobal(QPoint(static_cast<int>(topPoint.x()), static_cast<int>(topPoint.y() + 40))), this->warningMessage, this, QRect(), 3000);
+                QToolTip::showText(mapToGlobal(QPoint(static_cast<int>(topPoint.x()), static_cast<int>(topPoint.y() + 40))), this->warningMessage, this, QRect(), -1);
                 //QToolTip::setPalette(QApplication::palette()); // Reimposta il palette dei tooltip a quello predefinito
 
             }else{

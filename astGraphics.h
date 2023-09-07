@@ -167,6 +167,44 @@ public:
     void draw(QPoint& pos, QPainter& p) override;
 };
 
+class PowerNodeGraphics : public FunctionNodeGraphics {
+public:
+    PowerNodeGraphics(std::string function, std::vector<ASTNodeGraphics*> arg) {
+        QString n = QString::fromStdString(function);
+        name = n;
+        argument = arg;
+    }
+    ~PowerNodeGraphics() override {
+        for(size_t i=0; i<this->argument.size(); i++){
+            delete argument[i];
+        }
+    }
+
+    void calculateSizes(sizes& sz,QPainter& p) override;
+    void draw(QPoint& pos, QPainter& p) override;
+};
+
+class FreeTextNodeGraphics : public FunctionNodeGraphics {
+public:
+    FreeTextNodeGraphics(std::string function, std::string t) {
+        functionName = QString::fromStdString(function);
+        text = QString::fromStdString(t);
+    }
+    ~FreeTextNodeGraphics() override {
+        for(size_t i=0; i<this->argument.size(); i++){
+            delete argument[i];
+        }
+    }
+
+    void calculateSizes(sizes& sz,QPainter& p) override;
+    void draw(QPoint& pos, QPainter& p) override;
+
+private:
+    QString functionName;
+    QString text;
+};
+
+
 ASTNodeGraphics * createNodeGraphicsFromAST(ASTNode * node, FormulaWidget * ptr);
 
 int isArgumentFunction(ASTNodeGraphics *  node);

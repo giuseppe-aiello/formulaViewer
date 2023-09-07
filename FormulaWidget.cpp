@@ -67,7 +67,7 @@ void FormulaWidget::setFormula()
     std::string last_token = tokens.back();
 
 
-    std::regex patternOne(R"((sqrt|frac).*)");
+    std::regex patternOne(R"((sqrt|frac|pow).*)");
     if(std::regex_match(last_token, patternOne)){
         warningTriangle->setType(3);
         update();

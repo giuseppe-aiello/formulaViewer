@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QMenu>
 #include <regex>
+#include <qpainterpath.h>
 
 #include "utilityWidgets.h"
 //#include <QPolygonF>

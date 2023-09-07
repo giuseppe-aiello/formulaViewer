@@ -80,3 +80,58 @@ Widget::~Widget()
     delete ui;
 }
 
+void Widget::keyPressEvent(QKeyEvent* event) {
+    // Verifica se è stata premuta la combinazione "Alt+Invio"
+    if (event->modifiers() == Qt::SHIFT && event->key() == Qt::Key_Return) {
+        // Esegui l'azione di andare a capo (incrementa la posizione verticale)
+        QLineEdit * _lineEdit = findChild<QLineEdit*>("lineEdit");
+        QString text = _lineEdit->text();
+        text = text+"#";
+        _lineEdit->setText(text);
+
+        // Richiedi il repaint del widget per riflettere il cambiamento
+        FormulaWidget * _formulaWidget = findChild<FormulaWidget *>("formulaWidget");
+        _formulaWidget->setFormula();
+
+        // Ignora l'evento per evitare che venga gestito ulteriormente
+        event->accept();
+        return;
+    }
+    //BaseClass::keyPressEvent(event);
+}
+
+
+void Widget::openFile(){
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "/home/peppe/Desktop/SalvaFiles", tr("Text files (*.txt)"));
+    if(!fileName.isEmpty()){
+        QFile file (fileName);
+        if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
+            QTextStream in(&file);
+            QString fileContent = in.readAll();
+            file.close();
+            QLineEdit * _lineEdit = findChild<QLineEdit*>("lineEdit");
+            _lineEdit->setText(fileContent);
+        } else{
+            QMessageBox::warning(this, tr("Error"), tr("Impossible open the file."));
+        }
+    }
+}
+
+void Widget::saveFile(){
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save file"), "/home/peppe/Desktop/SalvaFiles", tr("Text files (*.txt)"));
+    if (!fileName.isEmpty()) {
+        if (!fileName.endsWith(".txt", Qt::CaseInsensitive)) {
+            fileName += ".txt"; // Aggiunge l'estensione .txt se non è già presente
+        }
+        // Esegui le operazioni desiderate per il salvataggio del file
+        QFile file(fileName);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream out(&file);
+            QLineEdit * _lineEdit = findChild<QLineEdit*>("lineEdit");
+            out << _lineEdit->text();
+            file.close();
+        } else {
+            QMessageBox::warning(this, tr("Error"), tr("Impossible save the file."));
+        }
+    }
+}
