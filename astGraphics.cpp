@@ -175,7 +175,7 @@ void BinaryOperatorNodeGraphics::draw(QPoint& pos, QPainter& p) {
     right->draw(pos, p);
     } else if (isLineBreak(op.toStdString())){
         left->draw(pos, p);
-        pos = QPoint(5, pos.y()+50);
+        pos = QPoint(5, pos.y()+80);
         right->draw(pos, p);
     }
 
@@ -370,17 +370,6 @@ void PowerNodeGraphics::draw(QPoint &pos, QPainter &p){
         //p.drawText(pos.x(), pos.y(), "(", QRectF(0, 0, 10, height));
 
 
-        QPainterPath path;
-
-        int parenHeight = height;
-        // Disegna il braccio orizzontale
-        path.moveTo(pos.x(), pos.y());
-
-        // Disegna la parte curva
-        path.moveTo(pos.x(), pos.y() - parenHeight);
-        path.quadTo(pos.x() - parenHeight * 0.6, pos.y() - parenHeight * 0.6, pos.x(), pos.y());
-
-        p.drawPath(path); // Disegna il percorso
 
         base->draw(pos, p);
         QFont powerFont("StyleNormal", 10);

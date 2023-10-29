@@ -39,9 +39,9 @@ Widget::Widget(QWidget *parent) :
     menuButton->setMenu(dropdownMenu);
 
     //Normali Azioni
-    QAction* action1 = toolbar->addAction("Azione 1");
-    QAction* action2 = toolbar->addAction("Azione 2");
-    QAction* action3 = toolbar->addAction("Azione 3");
+    //QAction* action1 = toolbar->addAction("Azione 1");
+    //QAction* action2 = toolbar->addAction("Azione 2");
+    //QAction* action3 = toolbar->addAction("Azione 3");
 
     ui->menuLayout->insertWidget(0,toolbar);
     //UI---------------------------------
@@ -102,7 +102,23 @@ void Widget::keyPressEvent(QKeyEvent* event) {
 
 
 void Widget::openFile(){
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "/home/peppe/Desktop/SalvaFiles", tr("Text files (*.txt)"));
+
+
+    QString appDirPath = QCoreApplication::applicationDirPath();
+
+    // Costruisci il percorso completo della cartella savedNotes
+    QString notesDirPath = appDirPath + QDir::separator() + "savedNotes";
+
+    // Verifica se la cartella esiste, altrimenti creala
+    QDir notesDir(notesDirPath);
+    if (!notesDir.exists()) {
+        if (!notesDir.mkpath(".")) {
+            qDebug() << "Impossibile creare la cartella savedNotes";
+            return;
+        }
+    }
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), notesDirPath, tr("Text files (*.txt)"));
     if(!fileName.isEmpty()){
         QFile file (fileName);
         if(file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -118,7 +134,24 @@ void Widget::openFile(){
 }
 
 void Widget::saveFile(){
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save file"), "/home/peppe/Desktop/SalvaFiles", tr("Text files (*.txt)"));
+    // Ottieni il percorso della directory dell'applicazione
+
+    QString appDirPath = QCoreApplication::applicationDirPath();
+
+    // Costruisci il percorso completo della cartella savedNotes
+    QString notesDirPath = appDirPath + QDir::separator() + "savedNotes";
+
+    // Verifica se la cartella esiste, altrimenti creala
+    QDir notesDir(notesDirPath);
+    if (!notesDir.exists()) {
+        if (!notesDir.mkpath(".")) {
+            qDebug() << "Impossibile creare la cartella savedNotes";
+            return;
+        }
+    }
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save file"), notesDirPath, tr("Text files (*.txt)"));
+
     if (!fileName.isEmpty()) {
         if (!fileName.endsWith(".txt", Qt::CaseInsensitive)) {
             fileName += ".txt"; // Aggiunge l'estensione .txt se non è già presente
@@ -135,3 +168,95 @@ void Widget::saveFile(){
         }
     }
 }
+
+void Widget::on_FRAC_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "frac(");
+}
+
+
+void Widget::on_EIGHT_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "8");
+}
+
+
+void Widget::on_FIVE_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "5");
+}
+
+
+void Widget::on_FOUR_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "4");
+}
+
+
+void Widget::on_NINE_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "9");
+
+}
+
+
+void Widget::on_ONE_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "1");
+
+}
+
+
+void Widget::on_POW_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "pow(");
+
+}
+
+
+void Widget::on_SEVEN_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "7");
+
+}
+
+
+void Widget::on_SIX_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "6");
+
+}
+
+
+void Widget::on_SQRT_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "sqrt(");
+
+}
+
+
+void Widget::on_THREE_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "3");
+
+}
+
+
+void Widget::on_TWO_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "2");
+}
+
+
+void Widget::on_RESET_clicked()
+{
+    ui->lineEdit->setText(" ");
+
+}
+
+void Widget::on_ZERO_clicked()
+{
+    ui->lineEdit->setText(ui->lineEdit->text()+ "0");
+
+}
+

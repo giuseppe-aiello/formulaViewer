@@ -11,6 +11,8 @@ FormulaWidget::FormulaWidget(QWidget* parent) :
     pal.setColor(QPalette::Window, Qt::white);
     setAutoFillBackground(true);
     setPalette(pal);
+
+
 }
 
 

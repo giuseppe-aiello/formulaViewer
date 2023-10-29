@@ -10,6 +10,8 @@
 #include <QMenu>
 #include <regex>
 #include <qpainterpath.h>
+#include "QScrollBar"
+
 
 #include "utilityWidgets.h"
 //#include <QPolygonF>
@@ -26,18 +28,18 @@ class FormulaWidget : public QWidget
     Q_OBJECT
     using BaseClass = QWidget;
 public:
-    explicit FormulaWidget(QWidget* parent = nullptr);
+    FormulaWidget(QWidget* parent = nullptr) ;
 
     TriangleWidget * getWarningTriangle(){
         return this->warningTriangle;
     }
+
 
 public slots:
     void setFormula();
 
 signals:
     void mouseMoved(const QPoint &position);
-
 protected:
     void mouseMoveEvent(QMouseEvent *event) override {
         emit mouseMoved(event->pos());
@@ -45,7 +47,10 @@ protected:
 
     virtual void paintEvent(QPaintEvent* event) override;
 
+
+
 private:
+
     ASTNodeGraphics * graphicsNode = nullptr;
     AST * ast = nullptr;
 

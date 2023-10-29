@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <widget.h>
+
 namespace Ui {
 class MainWindow;
 }
@@ -24,6 +25,8 @@ private slots:
     void on_startButton_clicked();
 
     void on_writer_clicked();
+
+    void on_legend_clicked();
 
 private:
     Ui::MainWindow *ui;

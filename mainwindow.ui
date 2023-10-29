@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>988</width>
     <height>600</height>
    </rect>
   </property>
@@ -51,6 +51,9 @@
     </item>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
       <widget class="QWidget" name="welcomePage">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -80,7 +83,7 @@ font-size: 40px;
 </string>
           </property>
           <property name="text">
-           <string>FormulaWriter</string>
+           <string>FormulaViewer</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -104,7 +107,7 @@ font-size: 40px;
            <string>This application allow you take mathematical notes on your desktop in a easy-to-use and fast way. &lt;br&gt;&lt;br&gt;
 &lt;b&gt; How it works &lt;/b&gt; &lt;br&gt; 
 The string you provide to the app is analyzed in detail, each function written in the right form will subsequently &lt;br&gt;
-be rendered in the form of a drawing.&lt;br&gt;&lt;br&gt;
+be rendered in the form of a drawing. More info on &lt;a href=&quot;https://github.com/giuseppe-aiello/formulaViewer&quot;&gt;Github&lt;/a&gt; .&lt;br&gt;&lt;br&gt;
 &lt;b&gt; How to use &lt;/b&gt; &lt;br&gt; 
 Read our formula legend and start writing your math notes right away. &lt;br&gt; &lt;br&gt;
 Example: sqrt(3, 12x + 12)</string>
@@ -130,6 +133,106 @@ Example: sqrt(3, 12x + 12)</string>
           </property>
           <property name="text">
            <string>START</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="legendPage">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>20</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>FUNCTIONs SYNTAX</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: italic;
+font-size: 25px;
+</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>IMPORTANT NOTES: </string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Remember not to remove elements in already processed functions -&gt; func(x, ) causes the application to crash</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>

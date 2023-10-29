@@ -26,6 +26,35 @@ public slots:
 protected:
     void keyPressEvent(QKeyEvent* event) override;
 
+private slots:
+    void on_FRAC_clicked();
+
+    void on_EIGHT_clicked();
+
+    void on_FIVE_clicked();
+
+    void on_FOUR_clicked();
+
+    void on_NINE_clicked();
+
+    void on_ONE_clicked();
+
+    void on_POW_clicked();
+
+    void on_SEVEN_clicked();
+
+    void on_SIX_clicked();
+
+    void on_SQRT_clicked();
+
+    void on_THREE_clicked();
+
+    void on_TWO_clicked();
+
+    void on_ZERO_clicked();
+
+    void on_RESET_clicked();
+
 private:
     Ui::Widget *ui;
 
